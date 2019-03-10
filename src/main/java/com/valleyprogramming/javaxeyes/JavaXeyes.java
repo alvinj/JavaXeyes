@@ -6,8 +6,9 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-//import com.apple.eawt.Application;
 import com.sun.awt.AWTUtilities;
+import com.apple.eawt.Application;
+
 
 /**
  * This is a Java version of the old X-Windows xeyes application.
@@ -69,7 +70,7 @@ public class JavaXeyes
   private int lastMouseY;
   private static final int SLEEP_TIME_MOUSE_MOVING     = 100;
   private static final int SLEEP_TIME_MOUSE_NOT_MOVING = 500;
-  private static final int SLEEP_TIME_BEFORE_QUITTING  = 1000;
+  private static final int SLEEP_TIME_BEFORE_QUITTING  = 750;
  
   private Point lastFrameLocation;
   private boolean inSmallDisplayMode = true;
@@ -85,7 +86,7 @@ public class JavaXeyes
   {
     new JavaXeyes();
   }
-  
+
   public JavaXeyes()
   {
     dieIfNotRunningOnMacOsX();
@@ -123,42 +124,53 @@ public class JavaXeyes
     // http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/#Enabling-Per-Pixel-Translucency
     AWTUtilities.setWindowOpaque(jEyesFrame, false);
 
+
+    //2019HACK1: catch the “quit” event [Cmd][Q]
+    Application macApp = Application.getApplication();
+    macApp.setQuitHandler((a,b) -> {
+      inRunMode = false;
+      doLastAnimation();
+    });
+
     // this is the main loop:
     // 1) get the mouse cursor position
     // 2) move the eyes to the right spot
     // 3) sleep for a bit
     eyesGlassPane.updateLocation(mouseX, mouseY, pupilDiameter, pupilDiameter);
-    Point leftEyeballPoint = null;
-    Point rightEyeballPoint = null;
     while (inRunMode)
     {
         // sets mouseX and mouseY
         getCurrentMouseLocation();
 
-        // get the current location of our frame
-        frameX = jEyesFrame.getX();
-        frameY = jEyesFrame.getY();
+        SwingUtilities.invokeLater(() -> {
+          // get the current location of our frame
+          frameX = jEyesFrame.getX();
+          frameY = jEyesFrame.getY();
 
-        leftEyeballPoint = getPupilCoordinates("left");
-        rightEyeballPoint = getPupilCoordinates("right");
+          Point leftEyeballPoint = getPupilCoordinates("left");
+          Point rightEyeballPoint = getPupilCoordinates("right");
 
-        eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
-        eyesGlassPane.repaint();
+          eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
+          eyesGlassPane.repaint();
+        });
 
-        // sleep
+        //THE ABOVE CODE USED TO BE SIMPLER, BUT DID NOT RUN ON THE EDT
+//        eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
+//        eyesGlassPane.repaint();
+
         sleep(getSleepTime());
         lastMouseX = mouseX;
         lastMouseY = mouseY;
-    }
-    
-    // come here when the user says 'quit' (i.e., when inRunMode = false)
-    //doLastAnimationAndExit();
-    //TODO in 2019, this animation doesn’t work after i removed the apple stuff,
-    //though there may be something else going on
-    SwingUtilities.invokeLater(() -> doLastAnimationAndExit());
 
+        //System.err.println("JEYES: in the loop");
+    }
+
+    //2019HACK1: need to wait a bit before quitting
+    sleep(SLEEP_TIME_BEFORE_QUITTING);
+    System.exit(0);
+    
   }
-  
+
   /**
    * Uses shared, global variables:
    *   frameX, frameY, leftEyeX, leftEyeY, rightEyeX, rightEyeY,
@@ -320,26 +332,24 @@ public class JavaXeyes
     
   }
 
-  public void handleQuitSignal()
-  {
-    inRunMode = false;
-  }
+//  public void handleQuitSignal()
+//  {
+//    System.err.println("JEYES: handleQuitSignal was called");
+//    inRunMode = false;
+//  }
 
   /**
    * Do one last 'fun' animation before quitting.
    */
-  private void doLastAnimationAndExit()
+  private void doLastAnimation()
   {
-    final int leftPupilX = leftEyeX + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
-    final int leftPupilY = leftEyeY + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
-    final int rightPupilY = rightEyeY + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
-    final int rightPupilX = rightEyeX + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
+      final int leftPupilX = leftEyeX + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
+      final int leftPupilY = leftEyeY + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
+      final int rightPupilY = rightEyeY + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
+      final int rightPupilX = rightEyeX + (int)Math.round(circleDiameter/2.0) - (int)Math.round(pupilDiameter/2.0);
 
-    eyesGlassPane.updateEyesAndRepaint(leftPupilX, leftPupilY, rightPupilX, rightPupilY);
-    eyesGlassPane.repaint();
-
-    sleep(SLEEP_TIME_BEFORE_QUITTING);
-    System.exit(0);
+      eyesGlassPane.updateEyesAndRepaint(leftPupilX, leftPupilY, rightPupilX, rightPupilY);
+      eyesGlassPane.repaint();
   }
   
 

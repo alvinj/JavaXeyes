@@ -8,7 +8,7 @@ javapackager \
   -deploy -Bruntime=${JAVA_HOME} \
   -native image \
   -srcdir . \
-  -srcfiles target/scala-2.12/javaxeyes_2.12-1.0.jar \
+  -srcfiles target/scala-2.12/JavaXeyes-assembly-1.0.jar \
   -outdir release \
   -outfile ${APP_DIR_NAME} \
   -appclass com.valleyprogramming.javaxeyes.JavaXeyes \

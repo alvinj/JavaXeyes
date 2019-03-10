@@ -6,4 +6,6 @@ currently relies on an API that may soon be deprecated. Other than
 that, hey, it works, and feel free to clean up the code if you
 have some free time.
 
+P.S. - There’s supposed to be a short animation when the
+application stops.
 
