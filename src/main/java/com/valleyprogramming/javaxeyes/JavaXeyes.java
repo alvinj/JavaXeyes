@@ -124,18 +124,20 @@ public class JavaXeyes
     // http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/#Enabling-Per-Pixel-Translucency
     AWTUtilities.setWindowOpaque(jEyesFrame, false);
 
-
-    //2019HACK1: catch the “quit” event [Cmd][Q]
+    //2019QUICKFIX1: catch the “quit” event [Cmd][Q]
     Application macApp = Application.getApplication();
     macApp.setQuitHandler((a,b) -> {
       inRunMode = false;
       doLastAnimation();
     });
 
+    //TODO update this to react, rather than poll
+    //-----------------------------------
     // this is the main loop:
     // 1) get the mouse cursor position
     // 2) move the eyes to the right spot
     // 3) sleep for a bit
+    //-----------------------------------
     eyesGlassPane.updateLocation(mouseX, mouseY, pupilDiameter, pupilDiameter);
     while (inRunMode)
     {
@@ -154,18 +156,12 @@ public class JavaXeyes
           eyesGlassPane.repaint();
         });
 
-        //THE ABOVE CODE USED TO BE SIMPLER, BUT DID NOT RUN ON THE EDT
-//        eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
-//        eyesGlassPane.repaint();
-
         sleep(getSleepTime());
         lastMouseX = mouseX;
         lastMouseY = mouseY;
-
-        //System.err.println("JEYES: in the loop");
     }
 
-    //2019HACK1: need to wait a bit before quitting
+    //2019QUICKFIX2: wait a bit before quitting here; allows for final animation
     sleep(SLEEP_TIME_BEFORE_QUITTING);
     System.exit(0);
     
@@ -290,6 +286,7 @@ public class JavaXeyes
    */
   private void dieIfNotRunningOnMacOsX()
   {
+    //2019QUICKFIX - this code may no longer be valid
 //    boolean mrjVersionExists = System.getProperty("mrj.version") != null;
 //    boolean osNameExists = System.getProperty("os.name").startsWith("Mac OS");
 //
@@ -300,12 +297,6 @@ public class JavaXeyes
 //    }
   }
 
-  /**
-   * You can use the Dimension object like this:
-   * 
-   * screenHeight = screenSize.height;
-   * screenWidth = screenSize.width;
-   */
   private Dimension getScreenSize()
   {
     return Toolkit.getDefaultToolkit().getScreenSize();
@@ -321,6 +312,7 @@ public class JavaXeyes
     System.setProperty("apple.laf.useScreenMenuBar", "true");
     System.setProperty("com.apple.mrj.application.apple.menu.about.name", APP_NAME);
 
+    //2019QUICKFIX - this code is old, out of date (on Java 8)
     // create an instance of the Mac Application class, so i can handle the 
     // mac quit event with the Mac ApplicationAdapter
 //    Application macApplication = Application.getApplication();
@@ -331,12 +323,6 @@ public class JavaXeyes
     //macApplication.setEnabledPreferencesMenu(true);
     
   }
-
-//  public void handleQuitSignal()
-//  {
-//    System.err.println("JEYES: handleQuitSignal was called");
-//    inRunMode = false;
-//  }
 
   /**
    * Do one last 'fun' animation before quitting.
@@ -460,10 +446,6 @@ public class JavaXeyes
   }
   
   
-//  public void doPreferencesAction()
-//  {
-//  }
-
   public void handleAboutAction()
   {
     // create an html editor/renderer
