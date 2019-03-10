@@ -1,0 +1,4 @@
+Main-Class: com.valleyprogramming.javaxeyes.JavaXeyes
+Implementation-Title: JavaXeyes
+Specification-Title: JavaXeyes
+
