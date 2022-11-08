@@ -26,8 +26,8 @@ public class JEyesPanel extends JPanel
       this.controller = controller;
       this.penThickness = penThickness;
       this.penColor = penColor;
-      // this.setOpaque(false);
-      // this.setBackground(new Color(255, 255, 255, 0) );
+      this.setOpaque(false);
+      // this.setBackground(new Color(255, 0, 0, 128));
   }
 
   /**
@@ -41,6 +41,8 @@ public class JEyesPanel extends JPanel
    */
   public void paintComponent(Graphics g) 
   {
+      super.paintComponent(g);
+
       // no call to 'super', we're doing all the painting
       Graphics2D g2 = (Graphics2D)g;
       Ellipse2D leftEye = new Ellipse2D.Double(leftEyeX, leftEyeY, eyeDiameter, eyeDiameter);
@@ -48,14 +50,16 @@ public class JEyesPanel extends JPanel
       g2.fill(leftEye);
       g2.setStroke(new BasicStroke(penThickness));
       g2.setPaint(penColor);
-      g2.draw(leftEye);
+      // EyesGlassPane does this now:
+      // g2.draw(leftEye);
 
       Ellipse2D rightEye = new Ellipse2D.Double(rightEyeX, rightEyeY, eyeDiameter, eyeDiameter);
       g2.setPaint(Color.WHITE);
       g2.fill(rightEye);
       g2.setStroke(new BasicStroke(penThickness));
       g2.setPaint(penColor);
-      g2.draw(rightEye);
+      // EyesGlassPane does this now:
+      // g2.draw(rightEye);
 
       // super.paintComponent(g);
   }

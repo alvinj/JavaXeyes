@@ -21,7 +21,8 @@ public class JEyesFrame extends JFrame
   private JavaXeyes mainController;
   private JComponent jEyesPanel;
 
-  private Color faceBackgroundColor = Color.DARK_GRAY;
+  // make it blue for debugging, but transparent for actual Production use:
+  private Color faceBackgroundColor = new Color(0, 0, 255, 0);
 
   /**
    * @param mainController
@@ -29,16 +30,22 @@ public class JEyesFrame extends JFrame
    */
   public JEyesFrame(JavaXeyes mainController, JComponent jEyesPanel)
   {
+      // bookkeeping
       this.mainController = mainController;
+      this.thisFrame = this;
       this.jEyesPanel = jEyesPanel;
-      this.getContentPane().add(jEyesPanel);
-      thisFrame = this;
 
+      // configure the jframe
+      this.getContentPane().add(jEyesPanel);
       this.setResizable(false);
       this.setUndecorated(true);
-      
       this.setBackground(faceBackgroundColor);
-      
+
+      // make it yellow for debugging, but transparent for actual Production use:
+      thisFrame.getContentPane().setBackground(new Color(255, 255, 0, 0));
+      thisFrame.setOpacity(0.5f);
+
+      // menubar
       addActions();
       this.setJMenuBar(createMenuBar());
   }
@@ -80,7 +87,7 @@ public class JEyesFrame extends JFrame
 
               // center the frame
               thisFrame.setLocationRelativeTo(null);
-              
+
               // display the frame
               thisFrame.setVisible(true);
               thisFrame.transferFocus();
