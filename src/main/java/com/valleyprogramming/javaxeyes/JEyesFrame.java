@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
+import java.awt.event.InputEvent;
 
 public class JEyesFrame extends JFrame
 {
@@ -13,11 +14,9 @@ public class JEyesFrame extends JFrame
   // our actions
   private Action fillWindowAction;
   private Action chooseColorAction;
-  private Action doLicenseAction;
   
-  private KeyStroke fillWindowKeystroke      = KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.META_MASK);
-  private KeyStroke chooseColorKeystroke     = KeyStroke.getKeyStroke(KeyEvent.VK_R, Event.META_MASK);
-  private KeyStroke doLicenseActionKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, Event.META_MASK);
+  private KeyStroke fillWindowKeystroke  = KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.META_DOWN_MASK);
+  private KeyStroke chooseColorKeystroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.META_DOWN_MASK);
   
   private JavaXeyes mainController;
   private JComponent jEyesPanel;
@@ -30,69 +29,69 @@ public class JEyesFrame extends JFrame
    */
   public JEyesFrame(JavaXeyes mainController, JComponent jEyesPanel)
   {
-    this.mainController = mainController;
-    this.jEyesPanel = jEyesPanel;
-    this.getContentPane().add(jEyesPanel);
-    thisFrame = this;
+      this.mainController = mainController;
+      this.jEyesPanel = jEyesPanel;
+      this.getContentPane().add(jEyesPanel);
+      thisFrame = this;
 
-    this.setResizable(false);
-    this.setUndecorated(true);
-    
-    this.setBackground(faceBackgroundColor);
-    
-    addActions();
-    this.setJMenuBar(createMenuBar());
+      this.setResizable(false);
+      this.setUndecorated(true);
+      
+      this.setBackground(faceBackgroundColor);
+      
+      addActions();
+      this.setJMenuBar(createMenuBar());
   }
 
   private void addActions()
   {
-    fillWindowAction = new FillWindowAction(this, "Fill Window", fillWindowKeystroke);
-    jEyesPanel.getInputMap().put(fillWindowKeystroke, "fillWindow");
-    jEyesPanel.getActionMap().put("fillWindow", fillWindowAction);
+      fillWindowAction = new FillWindowAction(this, "Fill Window", fillWindowKeystroke);
+      jEyesPanel.getInputMap().put(fillWindowKeystroke, "fillWindow");
+      jEyesPanel.getActionMap().put("fillWindow", fillWindowAction);
   }
   
   private JMenuBar createMenuBar()
   {
-    // create the menubar
-    JMenuBar menuBar = new JMenuBar();
+      // create the menubar
+      JMenuBar menuBar = new JMenuBar();
 
-    // create menu
-    JMenu actionsMenu = new JMenu("Actions");
-    
-    // create menu items
-    JMenuItem fillWindowMenuItem = new JMenuItem(fillWindowAction);
+      // create menu
+      JMenu actionsMenu = new JMenu("Actions");
+      
+      // create menu items
+      JMenuItem fillWindowMenuItem = new JMenuItem(fillWindowAction);
 
-    // add items to menu
-    actionsMenu.add(fillWindowMenuItem);
+      // add items to menu
+      actionsMenu.add(fillWindowMenuItem);
 
-    // add the menus to the menubar
-    menuBar.add(actionsMenu);
+      // add the menus to the menubar
+      menuBar.add(actionsMenu);
 
-    return menuBar;
+      return menuBar;
   }
   
   public void display(final int height, final int width)
   {
-    SwingUtilities.invokeLater(new Runnable()
-    {
-      public void run()
+      SwingUtilities.invokeLater(new Runnable()
       {
-        thisFrame.setSize(new Dimension(height, width));
+          public void run()
+          {
+              thisFrame.setSize(new Dimension(height, width));
 
-        // center the frame
-        thisFrame.setLocationRelativeTo(null);
-        
-        // display the frame
-        thisFrame.setVisible(true);
-        thisFrame.transferFocus();
-      }
-    });
+              // center the frame
+              thisFrame.setLocationRelativeTo(null);
+              
+              // display the frame
+              thisFrame.setVisible(true);
+              thisFrame.transferFocus();
+          }
+      });
   }
   
   public void setBackgroundColorOfFace(Color faceBackgroundColor)
   {
-    this.faceBackgroundColor = faceBackgroundColor;
-    this.setBackground(faceBackgroundColor);
+      this.faceBackgroundColor = faceBackgroundColor;
+      this.setBackground(faceBackgroundColor);
   }
 
   /**
@@ -100,7 +99,7 @@ public class JEyesFrame extends JFrame
    */
   public void handleMakeFullScreenKeystroke()
   {
-    mainController.makeFrameFullScreen();
+      mainController.makeFrameFullScreen();
   }
   
 }

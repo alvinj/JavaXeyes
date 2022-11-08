@@ -1,6 +1,6 @@
-# README
+# Scala/Java “XEyes” Application
 
-This is a Java version of the old “Xeyes” application.
+This is a Java/Scala version of the old “Xeyes” application.
 It’s written to work on MacOS systems, but it can probably
 be ported to Linux and Windows.
 
@@ -12,12 +12,22 @@ it a bit here in 2019. It also relies on a _com.sun.awt.AWTUtilities_
 that is deprecated, so that code needs to be replaced. (So, feel
 free to clean up and update the code, if so desired.)
 
-That being said, it’s a fun little app, and it works on Java 8 on
-MacOS 10.14 (Mojave). You should be able to build a native MacOS
-application with the two build scripts:
+I’m very slowly porting this code to Scala.
+Like really slowly, just a few lines a year, whenever I feel 
+like working on something different, or need to update my
+Scala/macOS app build process.
 
-- 1assembly.sh
-- 2makeApp.sh
+
+## Building the app
+
+The way I currently build the app is:
+
+- I run *sbt* in one Terminal window, with Java 11
+- I have another Terminal window open with Java 14, to run the `jpackage` script
+
+It probably isn’t necessary to have two windows open, but that’s what
+I did today.
+
  
 One other note: You can toggle the app to/from full-screen mode with
 the `[Command][F]` keystroke.

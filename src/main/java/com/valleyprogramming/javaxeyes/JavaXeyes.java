@@ -6,14 +6,14 @@ import java.io.IOException;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
-import com.sun.awt.AWTUtilities;
-import com.apple.eawt.Application;
 
 
 /**
  * This is a Java version of the old X-Windows xeyes application.
- * Created by Alvin Alexander of http://www.devdaily.com and
- * http://www.valleyprogramming.com
+ * Created by Alvin Alexander of https://alvinalexander.com and
+ * https://www.valleyprogramming.com
+ * 
+ * (Please note that most of this code was written in 2010-2011.)
  */
 public class JavaXeyes
 {
@@ -84,86 +84,82 @@ public class JavaXeyes
    */
   public static void main(String[] args)
   {
-    new JavaXeyes();
+      new JavaXeyes();
   }
 
   public JavaXeyes()
   {
-    dieIfNotRunningOnMacOsX();
-    configureForMacOSX();
-    
-    // construct our panel, then add the drag listener to it
-    // TODO finish refactoring this
-    jEyesPanel = new JEyesPanel(this, circlePenThickness, penColor);
-    jEyesPanel.setEyeSizeAndLocation(leftEyeX, leftEyeY, rightEyeX, rightEyeY);
-    jEyesPanel.setEyeDiameter(circleDiameter);
+      configureForMacOSX();
+      
+      // construct our panel, then add the drag listener to it
+      // TODO finish refactoring this
+      jEyesPanel = new JEyesPanel(this, circlePenThickness, penColor);
+      jEyesPanel.setEyeSizeAndLocation(leftEyeX, leftEyeY, rightEyeX, rightEyeY);
+      jEyesPanel.setEyeDiameter(circleDiameter);
 
-    DragWindowListener dragWindowListener = new DragWindowListener(jEyesPanel);
-    jEyesPanel.addMouseListener(dragWindowListener);
-    jEyesPanel.addMouseMotionListener(dragWindowListener);
-    
-    // create and display our jframe
-    jEyesFrame = new JEyesFrame(this, jEyesPanel);
+      DragWindowListener dragWindowListener = new DragWindowListener(jEyesPanel);
+      jEyesPanel.addMouseListener(dragWindowListener);
+      jEyesPanel.addMouseMotionListener(dragWindowListener);
+      
+      // create and display our jframe
+      jEyesFrame = new JEyesFrame(this, jEyesPanel);
 
-    // create our 'eyes' glass pane, and at it to the frame
-    eyesGlassPane = new EyesGlassPane(this);
-    jEyesFrame.setGlassPane(eyesGlassPane);
-    jEyesFrame.getGlassPane().setVisible(true);
+      // create our 'eyes' glass pane, and at it to the frame
+      eyesGlassPane = new EyesGlassPane(this);
+      jEyesFrame.setGlassPane(eyesGlassPane);
+      jEyesFrame.getGlassPane().setVisible(true);
 
-    // display our jframe
-    jEyesFrame.display(frameWidth, frameHeight);
-    frameX = jEyesFrame.getX();
-    frameY = jEyesFrame.getX();
-    lastFrameLocation = new Point(frameX, frameY);
-    
-    // these AWTUtilities settings come from Java SE 6u10
-    // this replaces the mac-specific property i was setting before (window.alpha)
-    AWTUtilities.setWindowOpacity(jEyesFrame, 1.0f);
-    // this line does the trick of making the frame see-thru, but keeping my circles,
-    // but, it made the eyes hard to grab (until i filled them with white). see this url:
-    // http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/#Enabling-Per-Pixel-Translucency
-    AWTUtilities.setWindowOpaque(jEyesFrame, false);
+      // display our jframe
+      jEyesFrame.display(frameWidth, frameHeight);
+      frameX = jEyesFrame.getX();
+      frameY = jEyesFrame.getX();
+      lastFrameLocation = new Point(frameX, frameY);
 
-    //2019QUICKFIX1: catch the “quit” event [Cmd][Q]
-    Application macApp = Application.getApplication();
-    macApp.setQuitHandler((a,b) -> {
-      inRunMode = false;
-      doLastAnimation();
-    });
+      // used to use this code here:
+      // AWTUtilities.setWindowOpacity(jEyesFrame, 1.0f);
+      // AWTUtilities.setWindowOpaque(jEyesFrame, false);
+      jEyesFrame.setOpacity(1.0f);
+      
+      // TODO: replace this code to get the last animation
+      // Application macApp = Application.getApplication();
+      // macApp.setQuitHandler((a,b) -> {
+      //   inRunMode = false;
+      //   doLastAnimation();
+      // });
 
-    //TODO update this to react, rather than poll
-    //-----------------------------------
-    // this is the main loop:
-    // 1) get the mouse cursor position
-    // 2) move the eyes to the right spot
-    // 3) sleep for a bit
-    //-----------------------------------
-    eyesGlassPane.updateLocation(mouseX, mouseY, pupilDiameter, pupilDiameter);
-    while (inRunMode)
-    {
-        // sets mouseX and mouseY
-        getCurrentMouseLocation();
+      //TODO update this to react, rather than poll
+      //-----------------------------------
+      // this is the main loop:
+      // 1) get the mouse cursor position
+      // 2) move the eyes to the right spot
+      // 3) sleep for a bit
+      //-----------------------------------
+      eyesGlassPane.updateLocation(mouseX, mouseY, pupilDiameter, pupilDiameter);
+      while (inRunMode)
+      {
+          // sets mouseX and mouseY
+          getCurrentMouseLocation();
 
-        SwingUtilities.invokeLater(() -> {
-          // get the current location of our frame
-          frameX = jEyesFrame.getX();
-          frameY = jEyesFrame.getY();
+          SwingUtilities.invokeLater(() -> {
+              // get the current location of our frame
+              frameX = jEyesFrame.getX();
+              frameY = jEyesFrame.getY();
 
-          Point leftEyeballPoint = getPupilCoordinates("left");
-          Point rightEyeballPoint = getPupilCoordinates("right");
+              Point leftEyeballPoint = getPupilCoordinates("left");
+              Point rightEyeballPoint = getPupilCoordinates("right");
 
-          eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
-          eyesGlassPane.repaint();
-        });
+              eyesGlassPane.updateEyes(leftEyeballPoint.x, leftEyeballPoint.y, rightEyeballPoint.x, rightEyeballPoint.y);
+              eyesGlassPane.repaint();
+          });
 
-        sleep(getSleepTime());
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-    }
+          sleep(getSleepTime());
+          lastMouseX = mouseX;
+          lastMouseY = mouseY;
+      }
 
-    //2019QUICKFIX2: wait a bit before quitting here; allows for final animation
-    sleep(SLEEP_TIME_BEFORE_QUITTING);
-    System.exit(0);
+      //2019QUICKFIX2: wait a bit before quitting here; allows for final animation
+      sleep(SLEEP_TIME_BEFORE_QUITTING);
+      System.exit(0);
     
   }
 
@@ -281,22 +277,6 @@ public class JavaXeyes
     }
   }
 
-  /**
-   * If the app is not running on mac os x, die right away.
-   */
-  private void dieIfNotRunningOnMacOsX()
-  {
-    //2019QUICKFIX - this code may no longer be valid
-//    boolean mrjVersionExists = System.getProperty("mrj.version") != null;
-//    boolean osNameExists = System.getProperty("os.name").startsWith("Mac OS");
-//
-//    if ( !mrjVersionExists || !osNameExists)
-//    {
-//      System.err.println("Not running on a Mac OS X system.");
-//      System.exit(1);
-//    }
-  }
-
   private Dimension getScreenSize()
   {
     return Toolkit.getDefaultToolkit().getScreenSize();
@@ -307,21 +287,11 @@ public class JavaXeyes
    */
   private void configureForMacOSX()
   {
-    // set some mac-specific properties; helps when i don't use ant to build the code
-    System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
-    System.setProperty("apple.laf.useScreenMenuBar", "true");
-    System.setProperty("com.apple.mrj.application.apple.menu.about.name", APP_NAME);
-
-    //2019QUICKFIX - this code is old, out of date (on Java 8)
-    // create an instance of the Mac Application class, so i can handle the 
-    // mac quit event with the Mac ApplicationAdapter
-//    Application macApplication = Application.getApplication();
-//    MyApplicationAdapter macAdapter = new MyApplicationAdapter(this);
-//    macApplication.addApplicationListener(macAdapter);
-    
-    // must enable the preferences option manually
-    //macApplication.setEnabledPreferencesMenu(true);
-    
+      // tested on November 8, 2022, and at least from within 'sbt',
+      // this code still has the proper/desired effect:
+      System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      System.setProperty("com.apple.mrj.application.apple.menu.about.name", APP_NAME);    
   }
 
   /**
@@ -388,10 +358,7 @@ public class JavaXeyes
 
     // calcs done, hide the current/small frame
     jEyesFrame.setVisible(false);
-
-    // remove the transparency attribute
-    AWTUtilities.setWindowOpacity(jEyesFrame, 1.0f);
-    AWTUtilities.setWindowOpaque(jEyesFrame, true);
+    jEyesFrame.setOpacity(1.0f);
 
     // tell the panel about the new sizes
     jEyesPanel.setPenColor(Color.BLACK);
@@ -425,10 +392,7 @@ public class JavaXeyes
 
     // hide the big frame
     jEyesFrame.setVisible(false);
-
-    // remove the transparency attribute
-    AWTUtilities.setWindowOpacity(jEyesFrame, 1.0f);
-    AWTUtilities.setWindowOpaque(jEyesFrame, false);
+    jEyesFrame.setOpacity(1.0f);
 
     // tell the panel about the new sizes
     jEyesPanel.setPenColor(Color.BLACK);

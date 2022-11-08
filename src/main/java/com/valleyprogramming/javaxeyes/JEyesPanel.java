@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-
 import javax.swing.JPanel;
 
 public class JEyesPanel extends JPanel
@@ -24,9 +23,11 @@ public class JEyesPanel extends JPanel
   
   public JEyesPanel(JavaXeyes controller, int penThickness, Color penColor)
   {
-    this.controller = controller;
-    this.penThickness = penThickness;
-    this.penColor = penColor;
+      this.controller = controller;
+      this.penThickness = penThickness;
+      this.penColor = penColor;
+      // this.setOpaque(false);
+      // this.setBackground(new Color(255, 255, 255, 0) );
   }
 
   /**
@@ -40,49 +41,47 @@ public class JEyesPanel extends JPanel
    */
   public void paintComponent(Graphics g) 
   {
-    // no call to 'super', we're doing all the painting
-    Graphics2D g2 = (Graphics2D)g;
-    Ellipse2D leftEye = new Ellipse2D.Double(leftEyeX, leftEyeY, eyeDiameter, eyeDiameter);
-    g2.setPaint(Color.WHITE);
-    g2.fill(leftEye);
-    g2.setStroke(new BasicStroke(penThickness));
-    g2.setPaint(penColor);
-    g2.draw(leftEye);
+      // no call to 'super', we're doing all the painting
+      Graphics2D g2 = (Graphics2D)g;
+      Ellipse2D leftEye = new Ellipse2D.Double(leftEyeX, leftEyeY, eyeDiameter, eyeDiameter);
+      g2.setPaint(Color.WHITE);
+      g2.fill(leftEye);
+      g2.setStroke(new BasicStroke(penThickness));
+      g2.setPaint(penColor);
+      g2.draw(leftEye);
 
-    Ellipse2D rightEye = new Ellipse2D.Double(rightEyeX, rightEyeY, eyeDiameter, eyeDiameter);
-    g2.setPaint(Color.WHITE);
-    g2.fill(rightEye);
-    g2.setStroke(new BasicStroke(penThickness));
-    g2.setPaint(penColor);
-    g2.draw(rightEye);
+      Ellipse2D rightEye = new Ellipse2D.Double(rightEyeX, rightEyeY, eyeDiameter, eyeDiameter);
+      g2.setPaint(Color.WHITE);
+      g2.fill(rightEye);
+      g2.setStroke(new BasicStroke(penThickness));
+      g2.setPaint(penColor);
+      g2.draw(rightEye);
+
+      // super.paintComponent(g);
   }
   
   public void setEyeSizeAndLocation(int leftEyeX, int leftEyeY, int rightEyeX, int rightEyeY)
   {
-    this.leftEyeX = leftEyeX;
-    this.leftEyeY = leftEyeY;
-    this.rightEyeX = rightEyeX;
-    this.rightEyeY = rightEyeY;
+      this.leftEyeX = leftEyeX;
+      this.leftEyeY = leftEyeY;
+      this.rightEyeX = rightEyeX;
+      this.rightEyeY = rightEyeY;
   }
 
-  public void setBackgroundColor(Color backgroundColor)
-  {
-    this.backgroundColor = backgroundColor;
+  public void setBackgroundColor(Color backgroundColor) {
+      this.backgroundColor = backgroundColor;
   }
 
-  public void setPenColor(Color penColor)
-  {
-    this.penColor = penColor;
+  public void setPenColor(Color penColor) {
+      this.penColor = penColor;
   }
 
-  public void setPenThickness(int penThickness)
-  {
-    this.penThickness = penThickness;
+  public void setPenThickness(int penThickness) {
+      this.penThickness = penThickness;
   }
   
-  public void setEyeDiameter(int eyeDiameter)
-  {
-    this.eyeDiameter = eyeDiameter;
+  public void setEyeDiameter(int eyeDiameter) {
+      this.eyeDiameter = eyeDiameter;
   }
   
 }
