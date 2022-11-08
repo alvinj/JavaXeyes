@@ -37,7 +37,7 @@ jpackage \
     --icon input/jeyes.icns \
     --mac-package-name $name \
     --mac-package-identifier $main_class \
-    --java-options -Xmx2048m
+    --java-options -Xmx256M
     # --module-path /Users/al/bin/jdk-14.0.1.jdk/Contents/Home/jmods \
     # --add-modules java.base,javafx.controls,javafx.web,javafx.graphics,javafx.media,java.datatransfer,java.desktop,java.scripting,java.xml,jdk.jsobject,jdk.unsupported,jdk.unsupported.desktop,jdk.xml.dom,javafx.fxml,java.naming,java.sql,jdk.charsets \
 
